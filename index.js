@@ -2,7 +2,11 @@
 (function() {
     let data = '';
     let svgContainer = '';
-    let tinyContainer = ''
+    let scales = {
+        margin: 50,
+        width: 1000,
+        height: 800
+    }
     let tinyScales = {
         width: 500,
         height: 500,
@@ -13,10 +17,6 @@
                         .append('svg')
                         .attr('width', 1400)
                         .attr('height', 800)
-        tinyContainer = d3.select('#popChart')
-                          .append('svg')
-                          .attr('width', 1400)
-                          .attr('height', 800)
         d3.csv('data/gapminder.csv')
             .then((res) => {
                 data = res;
@@ -34,17 +34,12 @@
             y_min: d3.min(numeric_expancy),
             y_max: d3.max(numeric_expancy),
         }
-        let scales = {
-            margin: 50,
-            width: 1000,
-            height: 800
-        }
         let helpers = getAxis(xy_limits, "fertility", "life_expectancy", scales, svgContainer);
         svgContainer.append('text')
                     .attr('x', 150)
                     .attr('y', 20)
                     .style('font-size', '20pt')
-                    .text("Fertility vs Life Expectancy");
+                    .text("Fertility vs Life Expectancy(1980)");
         svgContainer.append('text')
                     .attr('x', 770.5)
                     .attr('y', 790)
@@ -55,8 +50,11 @@
                     .style('font-size', '15pt')
                     .text('Life Expectancy');
         plotCircles(helpers)
-        let yearSelecter = d3.select("#filter").append("select")
-                              .attr("name", "year");
+        let yearSelecter = d3.select("body").append("select")
+                              .attr("name", "year")
+                              .attr('x', 1000)
+                              .attr('y', 100)
+                              .attr("class", "year-drop");
         yearSelecter.selectAll("option")
                     .data(["1980"])
                     .enter()
@@ -87,10 +85,10 @@
         let y_value = (d) => {return +d[y_axis]};
 
         let x_scale = d3.scaleLinear()
-                        .range([0 + scales.margin, scales.width - scales.margin])
+                        .range([scales.margin, scales.width - scales.margin])
                         .domain([xy_limits.x_min - 0.5, xy_limits.x_max + 0.5 ])
         let y_scale = d3.scaleLinear()
-                        .range([0 + scales.margin, scales.height - scales.margin])
+                        .range([scales.margin, scales.height - scales.margin])
                         .domain([xy_limits.y_max + 5, xy_limits.y_min - 5]);
         
         let x_map = (d) => {return x_scale(x_value(d))}

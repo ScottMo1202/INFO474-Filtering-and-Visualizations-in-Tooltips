@@ -1,0 +1,41 @@
+body {
+    font: 12px Arial;
+}
+
+path {
+    stroke-width: 2;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: left;
+    width: 500px;
+    height: 500px;
+    padding: 10px;
+    font: 14px sans-serif;
+    background: white;
+    border: 5px;
+    border-color: black;
+    pointer-events: none;
+    box-shadow: 1px 1px 2px 2px #888888;
+}
+
+b {
+    font: 20px sans-serif;
+}
+
+.year-drop {
+    position: absolute;
+    top: 100px;
+    left: 1090px;
+    width: 90px;
+}
