@@ -18,8 +18,8 @@ path {
 div.tooltip {
     position: absolute;
     text-align: left;
-    width: 500px;
-    height: 500px;
+    width: 380px;
+    height: 380px;
     padding: 10px;
     font: 14px sans-serif;
     background: white;
@@ -31,11 +31,4 @@ div.tooltip {
 
 b {
     font: 20px sans-serif;
-}
-
-.year-drop {
-    position: absolute;
-    top: 100px;
-    left: 1090px;
-    width: 90px;
 }

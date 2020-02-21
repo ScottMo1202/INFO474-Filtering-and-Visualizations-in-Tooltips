@@ -4,12 +4,12 @@
     let svgContainer = '';
     let scales = {
         margin: 50,
-        width: 1000,
+        width: 1200,
         height: 800
     }
     let tinyScales = {
-        width: 500,
-        height: 500,
+        width: 400,
+        height: 400,
         margin: 50
     }
     window.onload = () => {
@@ -50,35 +50,20 @@
                     .style('font-size', '15pt')
                     .text('Life Expectancy');
         plotCircles(helpers)
-        let yearSelecter = d3.select("body").append("select")
-                              .attr("name", "year")
-                              .attr('x', 1000)
-                              .attr('y', 100)
-                              .attr("class", "year-drop");
-        yearSelecter.selectAll("option")
-                    .data(["1980"])
-                    .enter()
-                    .append("option")
-                    .text(function(d) {return d})
-                    .attr("value", function(d) {return d})
-                    .attr("selected", function(d){ return d == 2015; })
-        filterCircicles(yearSelecter.node())
-        yearSelecter.on("change", function() {
-            filterCircicles(this)
-        })
+        let bigPops = data.filter((each) => +each["year"] == 1980);
+        bigPops = bigPops.filter((each) => +each["population"] > 100000000);
+        let popLimits = d3.extent(bigPops, d => d['year'])
+        let popScale = d3.scaleLinear()
+                    .domain([popLimits[0], popLimits[1]])
+                    .range([scales.left, scales.width + scales.left])
+        svgContainer.selectAll('.text')
+            .data(bigPops)
+            .enter()
+            .append('text')
+                .attr('x', function(d) { return helpers.x_scale(+d['fertility']) + 20 })
+                .attr('y', function(d) { return helpers.y_scale(+d['life_expectancy']) })
+                .text(function(d) { return d['country'] })
     } 
-    function filterCircicles(node) {
-        let showOthers = node.checked ? "inline" : "none";
-        let show = node.checked ? "none" : "inline";
-        svgContainer.selectAll(".circles")
-                    .data(data)
-                    .filter(function (d) {return node.value != d.year})
-                    .attr('display', showOthers)
-        svgContainer.selectAll(".circles")
-                    .data(data)
-                    .filter(function (d) {return node.value == d.year})
-                    .attr('display', show)
-    }
 
     function getAxis(xy_limits, x_axis, y_axis, scales, container) {
         let x_value = (d) => {return +d[x_axis]};
@@ -117,8 +102,9 @@
                             .domain([d3.extent(populations)[0], d3.extent(populations)[1]])
                             .range([3, 50])
         let cleanData = data.filter((each) => {
-            return each.year == 1960 && each.fertility != "NA" && each.life_expectancy != "NA"
+            return each.year == 1980 && each.fertility != "NA" && each.life_expectancy != "NA"
         })
+        console.log(cleanData);
         let toolTip = d3.select("body").append("div")
                         .attr("class", "tooltip")
                         .style("opacity", 0);
@@ -127,7 +113,7 @@
                             .attr('width', tinyScales.width)
                             .attr('height', tinyScales.height)
         svgContainer.selectAll('.dot')
-                    .data(data)
+                    .data(cleanData)
                     .enter()
                     .append('circle')
                     .attr('cx', helpers.x)
